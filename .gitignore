@@ -1,0 +1,82 @@
+# ===== AMBIENTE VIRTUAL =====
+venv/
+env/
+ENV/
+.venv/
+.ENV/
+
+# ===== ARQUIVOS DE AMBIENTE =====
+.env
+.env.local
+.env.*.local
+*.env
+
+# ===== PYTHON =====
+__pycache__/
+*.py[cod]
+*.pyc
+*.pyo
+*.pyd
+*$py.class
+*.so
+
+# ===== NLTK & DADOS =====
+nltk_data/
+*.pkl
+*.pickle
+
+# ===== FASTAPI & UVICORN =====
+*.log
+logs/
+
+# ===== EDITORES & IDEs =====
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ===== SISTEMA OPERACIONAL =====
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ===== ARQUIVOS TEMPORÁRIOS =====
+*.tmp
+*.temp
+*.bak
+*.backup
+
+# ===== BANCO DE DADOS =====
+*.db
+*.sqlite
+*.sqlite3
+
+# ===== UPLOADS & ARQUIVOS GRANDES =====
+uploads/
+*.csv
+*.xlsx
+*.pdf
+
+# ===== TESTES & COBERTURA =====
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.cache
+nosetests.xml
+coverage.xml
+
+# ===== DOCUMENTAÇÃO =====
+docs/_build/
+site/
+
+# ===== DISTRIBUIÇÃO =====
+build/
+dist/
+*.egg-info/
