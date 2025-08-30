@@ -1,6 +1,3 @@
-"""
-Configurações da aplicação e variáveis de ambiente
-"""
 import os
 from dotenv import load_dotenv
 
@@ -15,7 +12,6 @@ API_CONFIG = {
     "docs_url": "/docs",
     "redoc_url": "/redoc",
     "debug": True,
-    
 }
 
 # Configuração OpenAI
@@ -28,17 +24,15 @@ OPENAI_TIMEOUT = int(os.getenv("OPENAI_TIMEOUT", "15"))
 MAX_FILE_SIZE = 10 * 1024 * 1024  # 10MB
 
 # Configurações do servidor
-HOST = os.getenv("HOST", "127.0.0.1")
+HOST = os.getenv("HOST", "0.0.0.0")  # Heroku precisa de 0.0.0.0
 PORT = int(os.getenv("PORT", "8000"))
 DEBUG = os.getenv("DEBUG", "false").lower() == "true"
 
-# Origins permitidos para CORS
+# Origins permitidos para CORS (removidas barras finais)
 ALLOWED_ORIGINS = [
-    "https://email-smart-ai-frontend.vercel.app/",
+    "https://email-smart-ai-frontend.vercel.app",
     "http://localhost:3000",
     "http://127.0.0.1:3000",
-    "http://localhost:8080",
     "http://localhost:5173",
     "http://localhost:4200",
-    "http://localhost:8000",
 ]

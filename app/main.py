@@ -43,12 +43,13 @@ async def shutdown_event():
 
 if __name__ == "__main__":
     import uvicorn
-    from app.config.settings import HOST, PORT, DEBUG
+    import os
     
+    port = int(os.getenv("PORT", 8000))
     uvicorn.run(
         "src.main:app",
-        host=HOST,
-        port=PORT,
-        reload=DEBUG,
-        log_level="info" if DEBUG else "warning"
+        host="0.0.0.0",
+        port=port,
+        reload=os.getenv("DEBUG", "false").lower() == "true",
+        log_level="info"
     )

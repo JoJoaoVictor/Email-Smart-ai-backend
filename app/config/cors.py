@@ -1,6 +1,3 @@
-"""
-Configuração CORS para a aplicação
-"""
 from fastapi.middleware.cors import CORSMiddleware
 from .settings import ALLOWED_ORIGINS
 
@@ -11,7 +8,7 @@ def setup_cors(app):
         allow_origins=ALLOWED_ORIGINS,
         allow_credentials=True,
         allow_methods=["GET", "POST", "OPTIONS", "PUT", "DELETE"],
-        allow_headers=["*"],
+        allow_headers=["*","Authorization","if-none-match"],
         expose_headers=["*"]
     )
     return app
