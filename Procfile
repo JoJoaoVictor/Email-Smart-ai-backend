@@ -1,1 +1,1 @@
-web: python start.py
+web: python nltk_setup.py && gunicorn app.main:app --bind 0.0.0.0:$PORT
