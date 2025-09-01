@@ -20,11 +20,55 @@ class EmailProcessor:
         self.stop_words = self._load_stopwords()
     
     def _load_stopwords(self):
-        """Carregar stopwords com fallback"""
+        """Carregar stopwords com fallback robusto"""
         try:
+            # Tenta baixar stopwords se não estiverem disponíveis
+            try:
+                nltk.data.find('corpora/stopwords')
+            except LookupError:
+                nltk.download('stopwords', quiet=True)
+            
+            # Tenta português primeiro
             return set(stopwords.words('portuguese'))
-        except:
-            return set(stopwords.words('english'))
+        except Exception as e:
+            logger.warning(f"Stopwords português não disponíveis: {e}")
+            try:
+                # Fallback para inglês
+                return set(stopwords.words('english'))
+            except Exception as e2:
+                logger.warning(f"Stopwords inglês não disponíveis: {e2}")
+                # Fallback manual se tudo falhar
+                return self._get_manual_stopwords()
+    
+    def _get_manual_stopwords(self):
+        """Stopwords manuais como fallback absoluto"""
+        portuguese_stopwords = {
+            'a', 'ao', 'aos', 'aquela', 'aquelas', 'aquele', 'aqueles', 'aquilo', 'as', 'até', 
+            'com', 'como', 'da', 'das', 'de', 'dela', 'delas', 'dele', 'deles', 'depois', 
+            'do', 'dos', 'e', 'ela', 'elas', 'ele', 'eles', 'em', 'entre', 'era', 'eram', 
+            'é', 'essa', 'essas', 'esse', 'esses', 'esta', 'estas', 'este', 'estes', 'eu', 
+            'foi', 'foram', 'há', 'isso', 'isto', 'já', 'lhe', 'lhes', 'mais', 'mas', 'me', 
+            'mesmo', 'meu', 'meus', 'minha', 'minhas', 'muito', 'na', 'nas', 'no', 'nos', 
+            'nós', 'nossa', 'nossas', 'nosso', 'nossos', 'num', 'numa', 'o', 'os', 'ou', 
+            'para', 'pela', 'pelas', 'pelo', 'pelos', 'por', 'quando', 'que', 'quem', 'se', 
+            'sem', 'seu', 'seus', 'só', 'sua', 'suas', 'também', 'te', 'tem', 'têm', 'teu', 
+            'teus', 'tu', 'tua', 'tuas', 'um', 'uma', 'você', 'vocês', 'vos', 'para', 'é',
+            'ser', 'estar', 'tem', 'ter', 'foi', 'são', 'como', 'mas', 'já', 'ou', 'se',
+            'não', 'sim', 'também', 'muito', 'pouco', 'mais', 'menos', 'bem', 'mal', 'agora',
+            'depois', 'antes', 'sempre', 'nunca', 'hoje', 'ontem', 'amanhã'
+        }
+        logger.info("Usando stopwords manuais - NLTK não disponível")
+        return portuguese_stopwords
+    
+    def _ensure_punkt(self):
+        """Garante que o tokenizer punkt está disponível"""
+        try:
+            nltk.data.find('tokenizers/punkt')
+        except LookupError:
+            try:
+                nltk.download('punkt', quiet=True)
+            except Exception as e:
+                logger.warning(f"Punkt tokenizer não disponível: {e}")
     
     def preprocess_text(self, text: str) -> tuple[str, list[str]]:
         """Pré-processar texto e extrair palavras-chave"""
@@ -35,10 +79,19 @@ class EmailProcessor:
             if not text or not isinstance(text, str):
                 return processed_text, keywords
             
+            # Garante que o punkt está disponível
+            self._ensure_punkt()
+            
             text = text.lower()
             text = re.sub(r'[^a-zA-Záàâãéèêíïóôõöúçñ\s]', ' ', text)
             
-            tokens = word_tokenize(text)
+            # Tenta tokenização com fallback
+            try:
+                tokens = word_tokenize(text)
+            except Exception as tokenize_error:
+                logger.warning(f"Tokenização falhou, usando split simples: {tokenize_error}")
+                tokens = text.split()
+            
             filtered_tokens = [
                 word for word in tokens 
                 if word not in self.stop_words and len(word) > 2
@@ -54,6 +107,14 @@ class EmailProcessor:
             
         except Exception as e:
             logger.error(f"Erro no pré-processamento: {e}")
+            # Fallback básico
+            if text:
+                text_lower = text.lower()
+                keywords = [
+                    word for word in text_lower.split() 
+                    if word in PRODUCTIVE_KEYWORDS or word in UNPRODUCTIVE_KEYWORDS
+                ]
+                processed_text = text_lower
         
         return processed_text, keywords
     
