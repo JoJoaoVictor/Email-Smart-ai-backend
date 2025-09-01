@@ -8,6 +8,9 @@ from app.config.settings import API_CONFIG
 from app.config.cors import setup_cors
 from app.middleware.logging_middleware import logging_middleware
 from app.routes import email_routes, file_routes, utility_routes
+import nltk
+nltk.download('stopwords')
+nltk.download('punkt')
 
 # Configurar logging
 logging.basicConfig(

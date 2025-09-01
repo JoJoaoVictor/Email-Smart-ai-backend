@@ -1,1 +1,1 @@
-web: gunicorn main:app 
+web: python pre_start.py && uvicorn src.main:app --host=0.0.0.0 --port=${PORT:-8000}
