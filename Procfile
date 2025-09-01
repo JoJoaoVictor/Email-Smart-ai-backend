@@ -1,1 +1,1 @@
-web: python nltk_setup.py && gunicorn app.main:app
+web: python start.py
