@@ -34,10 +34,21 @@ DEBUG = os.getenv("DEBUG", "false").lower() == "true"
 
 # Origins permitidos para CORS
 ALLOWED_ORIGINS = [
+    # DOMÍNIOS DA VERCEL (ADICIONE ESTES)
+    "https://email-smart-ai-frontend.vercel.app",
+    "https://email-smart-ai-frontend-git-main-jojoaovictors-projects.vercel.app",
+    "https://email-smart-ai-frontend-7Ouo3xOxt-jojoaovictors-projects.vercel.app",
+    
+    # Desenvolvimento local (já existente)
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     "http://localhost:8080",
     "http://localhost:5173",
     "http://localhost:4200",
     "http://localhost:8000",
+    
+    # Versões HTTPS do localhost (importante)
+    "https://localhost:3000",
+    "https://localhost:5173",
+    "https://localhost:8000",
 ]
